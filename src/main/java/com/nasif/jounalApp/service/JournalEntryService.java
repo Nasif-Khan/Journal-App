@@ -3,13 +3,11 @@ package com.nasif.jounalApp.service;
 import com.nasif.jounalApp.entity.JournalEntry;
 import com.nasif.jounalApp.entity.User;
 import com.nasif.jounalApp.repository.JournalEntryRepository;
-import com.nasif.jounalApp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
