@@ -1,14 +1,20 @@
 package com.nasif.jounalApp.controller;
 
+import com.nasif.jounalApp.api.response.QuoteResponse;
+import com.nasif.jounalApp.api.response.WeatherResponse;
 import com.nasif.jounalApp.entity.User;
 import com.nasif.jounalApp.repository.UserRepository;
+import com.nasif.jounalApp.service.QuoteService;
 import com.nasif.jounalApp.service.UserService;
+import com.nasif.jounalApp.service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -18,6 +24,12 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private WeatherService weatherService;
+
+    @Autowired
+    private QuoteService quoteService;
 
     @PutMapping
     public ResponseEntity<?> updateUser(@RequestBody User user){
@@ -39,5 +51,41 @@ public class UserController {
         userRepository.deleteByUserName(authentication.getName());
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/greet")
+    public ResponseEntity<?> greetUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String greeting = "";
+        String weatherDescription = "";
+        String user = authentication.getName();
+        WeatherResponse weatherResponse = weatherService.getWeather("Hyderabad");
+        if(weatherResponse != null){
+            int feelslike = weatherResponse.getCurrent().getFeelslike();
+            greeting = "Hi " + user + ", today it feels like, " + feelslike + "°C";
+            weatherDescription = weatherResponse.getCurrent().getWeatherDescriptions().get(0);
+        }
+        return new ResponseEntity<>(greeting + "\n" + weatherDescription , HttpStatus.OK);
+    }
+
+    @GetMapping("/quote")
+    public ResponseEntity<?> quoteUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String user = authentication.getName();
+        String quoteMessage = "";
+        List<QuoteResponse> quoteResponse = quoteService.getQuote();
+        if (quoteResponse != null && !quoteResponse.isEmpty()) {
+            QuoteResponse quoteObj = quoteResponse.get(0); // get the first quote
+
+            String quote = quoteObj.getQuote();
+            String author = quoteObj.getAuthor();
+            String category = quoteObj.getCategory();
+
+            quoteMessage = "Hi " + user + "\nHere is a '" + category + "' category quote by " + author + "\n" + quote;
+
+        }
+        return new ResponseEntity<>(quoteMessage , HttpStatus.OK);
+
+    }
+
 
 }
