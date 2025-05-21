@@ -2,14 +2,18 @@ package com.nasif.jounalApp.service;
 
 import com.nasif.jounalApp.api.response.WeatherResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-@Component
+@Service
 public class WeatherService {
-    private static final String apiKey =  "259435a8dc2b408f6e8af6fbb1100b8e";
+    @Value("${weather.api.key}")
+    private String apiKey;
+
     private static final String api = "http://api.weatherstack.com/current?access_key=API_KEY&query=CITY";
 
     @Autowired
