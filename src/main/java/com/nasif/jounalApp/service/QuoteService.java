@@ -1,6 +1,7 @@
 package com.nasif.jounalApp.service;
 
 import com.nasif.jounalApp.api.response.QuoteResponse;
+import com.nasif.jounalApp.cache.AppCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -18,15 +19,20 @@ import java.util.List;
 public class QuoteService {
     @Value("${quotes.api.key}")
     private String apiKey;
-    private static final String api = "https://api.api-ninjas.com/v1/quotes";
+//    private static final String api = "https://api.api-ninjas.com/v1/quotes";
+
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private AppCache appCache;
 
     public List<QuoteResponse> getQuote(){
         HttpHeaders headers = new HttpHeaders();
         headers.set("x-api-key", apiKey);
         HttpEntity<String> entity = new HttpEntity<>(headers);
+        String api = appCache.cache.get("quotes_api");
 
         ResponseEntity<List<QuoteResponse>> response = restTemplate.exchange(
                 api,

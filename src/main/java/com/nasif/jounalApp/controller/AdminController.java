@@ -1,5 +1,6 @@
 package com.nasif.jounalApp.controller;
 
+import com.nasif.jounalApp.cache.AppCache;
 import com.nasif.jounalApp.entity.User;
 import com.nasif.jounalApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AppCache appCache;
+
     @GetMapping("/all-users")
     public ResponseEntity<?> getAllUsers() {
         List<User> all = userService.getAll();
@@ -28,5 +32,10 @@ public class AdminController {
     @PostMapping("/create-admin-user")
     public void createUser(@RequestBody User user) {
         userService.saveAdmin(user);
+    }
+
+    @GetMapping("/refresh-app-cache")
+    public void refreshAppCache() {
+        appCache.init();
     }
 }
