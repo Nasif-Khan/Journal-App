@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Disabled;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Disabled
 public class UserServiceTests {
     @Autowired
     private UserRepository userRepository;

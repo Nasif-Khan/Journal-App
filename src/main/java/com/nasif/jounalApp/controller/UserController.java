@@ -31,6 +31,7 @@ public class UserController {
     @Autowired
     private QuoteService quoteService;
 
+
     @PutMapping
     public ResponseEntity<?> updateUser(@RequestBody User user){
 //        We need credentials to update the user, as there is no path parameter
@@ -86,6 +87,4 @@ public class UserController {
         return new ResponseEntity<>(quoteMessage , HttpStatus.OK);
 
     }
-
-
 }
