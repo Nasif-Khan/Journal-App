@@ -1,5 +1,6 @@
 package com.nasif.jounalApp.entity;
 
+import com.nasif.jounalApp.enums.Sentiments;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -19,5 +20,5 @@ public class JournalEntry {
     private String title;
     private String content;
     private LocalDateTime date;
-
+    private Sentiments sentiment;
 }
