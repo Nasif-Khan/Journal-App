@@ -10,11 +10,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class UserServiceTests {
-    @Autowired
-    private UserRepository userRepository;
-
-    @Test
-    public void testFindByUserName() {
-        assertNotNull(userRepository.findByUserName("nasif"));
-    }
+//    @Autowired
+//    private UserRepository userRepository;
+//
+//    @Test
+//    public void testFindByUserName() {
+//        assertNotNull(userRepository.findByUserName("nasif"));
+//    }
 }

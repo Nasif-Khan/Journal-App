@@ -9,13 +9,13 @@ import org.springframework.data.redis.core.RedisTemplate;
 @SpringBootTest
 public class RedisServiceTests {
 
-    @Autowired
-    private RedisTemplate redisTemplate;
-
-    @Disabled
-    @Test
-    void testRedisConnection() {
-        redisTemplate.opsForValue().set("key", "value");
-        Object key = redisTemplate.opsForValue().get("key");
-    }
+//    @Autowired
+//    private RedisTemplate redisTemplate;
+//
+//    @Disabled
+//    @Test
+//    void testRedisConnection() {
+//        redisTemplate.opsForValue().set("key", "value");
+//        Object key = redisTemplate.opsForValue().get("key");
+//    }
 }

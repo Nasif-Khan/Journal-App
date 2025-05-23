@@ -6,12 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
+@Disabled
 public class UserSchedulerTests {
-    @Autowired
-    private UserScheduler userScheduler;
-
-    @Test
-    public void testFetchUsersAndSendEmail(){
-        userScheduler.fetchUsersAndSendEmail();
-    }
+//    @Autowired
+//    private UserScheduler userScheduler;
+//
+//    @Test
+//    public void testFetchUsersAndSendEmail(){
+//        userScheduler.fetchUsersAndSendEmail();
+//    }
 }

@@ -9,14 +9,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Disabled
 public class EmailServiceTests {
 
-    @Autowired
-    private EmailService emailService;
-
-    @Disabled
-    @Test
-    void testSendEmail() {
-        emailService.sendEmail("sample@email.com",
-                "Trail email ",
-                "This mail is auto-generated and sent");
-    }
+//    @Autowired
+//    private EmailService emailService;
+//
+//    @Disabled
+//    @Test
+//    void testSendEmail() {
+//        emailService.sendEmail("sample@email.com",
+//                "Trail email ",
+//                "This mail is auto-generated and sent");
+//    }
 }
