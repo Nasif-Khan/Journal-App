@@ -1,9 +1,12 @@
 package com.nasif.jounalApp.controller;
 
+import com.nasif.jounalApp.dto.JournalDTO;
 import com.nasif.jounalApp.entity.JournalEntry;
 import com.nasif.jounalApp.entity.User;
+import com.nasif.jounalApp.mapper.JournalDtoMapper;
 import com.nasif.jounalApp.service.JournalEntryService;
 import com.nasif.jounalApp.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +32,8 @@ public class JournalEntryControllerV2 {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<?> getAllJournalEntriesOfUser(){
+    @Operation(summary = "Gets all the journal entries of the current/logged-in user")
+    public ResponseEntity<List<JournalEntry>> getAllJournalEntriesOfUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
         User user = userService.findByUserName(userName);
@@ -41,7 +45,9 @@ public class JournalEntryControllerV2 {
     }
 
     @PostMapping
-    public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry newEntry){
+    @Operation(summary = "Creates a new journal entry for the current user")
+    public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalDTO currentEntry){
+        JournalEntry newEntry = JournalDtoMapper.toEntity(currentEntry);
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String userName = authentication.getName();
@@ -53,7 +59,8 @@ public class JournalEntryControllerV2 {
     }
 
     @GetMapping("/id/{id}") // myID is the PathVariable
-    public ResponseEntity<?> getJournalByID(@PathVariable String id){
+    @Operation(summary = "Get the journal of the current user by its journal id")
+    public ResponseEntity<JournalEntry> getJournalByID(@PathVariable String id){
         ObjectId myID = new ObjectId(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
@@ -68,8 +75,10 @@ public class JournalEntryControllerV2 {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 }
 
-    @DeleteMapping("id/{myID}") // myID is the PathVariable
-    public ResponseEntity<?> deleteJournalByID(@PathVariable ObjectId myID){
+    @DeleteMapping("id/{id}") // myID is the PathVariable
+    @Operation(summary = "Deletes the journal of the current user by its journal id")
+    public ResponseEntity<Object> deleteJournalByID(@PathVariable String id){
+        ObjectId myID = new ObjectId(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
         boolean removed = journalEntryService.deleteJournalEntryById(myID, userName);
@@ -79,8 +88,11 @@ public class JournalEntryControllerV2 {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("id/{myID}")
-    public ResponseEntity<?> updateJournalByID(@PathVariable ObjectId myID, @RequestBody JournalEntry newEntry){
+    @PutMapping("id/{id}")
+    @Operation(summary = "Updates the journal of the current user by its journal id")
+    public ResponseEntity<JournalEntry> updateJournalByID(@PathVariable String id, @RequestBody JournalDTO currentEntry){
+        JournalEntry newEntry = JournalDtoMapper.toEntity(currentEntry);
+        ObjectId myID = new ObjectId(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
         User user = userService.findByUserName(userName);
@@ -91,6 +103,7 @@ public class JournalEntryControllerV2 {
                 JournalEntry oldEntry = journalEntry.get();
                 oldEntry.setContent(newEntry.getContent() != null && !newEntry.getContent().isEmpty() ? newEntry.getContent() : oldEntry.getContent());
                 oldEntry.setTitle(newEntry.getTitle() != null && !newEntry.getTitle().isEmpty() ? newEntry.getTitle() : oldEntry.getTitle());
+                oldEntry.setSentiment(newEntry.getSentiment() != null ? newEntry.getSentiment() : oldEntry.getSentiment());
                 journalEntryService.saveEntry(oldEntry);
                 return new ResponseEntity<>(oldEntry, HttpStatus.OK);
             }

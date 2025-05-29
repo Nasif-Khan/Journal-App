@@ -43,7 +43,7 @@ public class PublicController {
     }
 
     @PostMapping("/signup")
-    @Operation(summary = "To register on the journal app as a user")
+    @Operation(summary = "To register on the journal app as a user. Execute it to get the jwt token to authenticate for other endpoints")
 
     public ResponseEntity<User> createUser(@RequestBody SignupDTO user){
         User newUser = SignupDtoMapper.toEntity(user);

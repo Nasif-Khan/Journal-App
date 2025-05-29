@@ -27,8 +27,9 @@ public class SwaggerConfig {
                                 "2. User API\n" +
                                 "3. Journal API\n" +
                                 "4. Admin API\n\n" +
-                                "Only public API can be accessed without authentication\n" +
-                                "Other APIs requires authentication via JWT token. You can get the token by loggin in using the login endpoint. \n\n" +
+                                "Only public API can be accessed without authentication.\n" +
+                                "Other APIs requires authentication via JWT token. You can get the token by logging in using the '/public/login' endpoint. \n\n" +
+                                "Admin API can be accessed only for user with \"ADMIN\" role. Not in free trial.\n\n" +
                                 "Note: We are currently working on re-ordering of the APIs"))
                 .servers(
                         List.of(

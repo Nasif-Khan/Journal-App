@@ -21,4 +21,5 @@ public class JournalEntry {
     private String content;
     private LocalDateTime date;
     private Sentiments sentiment;
+
 }

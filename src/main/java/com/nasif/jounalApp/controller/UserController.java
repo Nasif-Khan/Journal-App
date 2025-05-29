@@ -2,7 +2,9 @@ package com.nasif.jounalApp.controller;
 
 import com.nasif.jounalApp.api.response.QuoteResponse;
 import com.nasif.jounalApp.api.response.WeatherResponse;
+import com.nasif.jounalApp.dto.LoginDTO;
 import com.nasif.jounalApp.entity.User;
+import com.nasif.jounalApp.mapper.LoginDtoMapper;
 import com.nasif.jounalApp.repository.UserRepository;
 import com.nasif.jounalApp.service.QuoteService;
 import com.nasif.jounalApp.service.UserService;
@@ -36,7 +38,9 @@ public class UserController {
 
 
     @PutMapping
-    public ResponseEntity<?> updateUser(@RequestBody User user){
+    @Operation(summary = "Update username and/or password of an existing user")
+    public ResponseEntity<Object> updateUser(@RequestBody LoginDTO currentUser){
+        User user = LoginDtoMapper.toEntity(currentUser);
 //        We need credentials to update the user, as there is no path parameter
 //        This comes from SecurityContextHolder
 //        SecurityContextHolder have the context i.e. the username and password of the user
@@ -50,15 +54,16 @@ public class UserController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteUser(){
+    @Operation(summary = "Deletes the user from the database")
+    public ResponseEntity<Object> deleteUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         userRepository.deleteByUserName(authentication.getName());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/greet")
-    @Operation(summary = "greet the user and gets the current weather of the user's location")
-    public ResponseEntity<?> greetUser(){
+    @Operation(summary = "Greet the user and gets the current weather of the user's location")
+    public ResponseEntity<String> greetUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String greeting = "";
         String weatherDescription = "";
@@ -73,8 +78,8 @@ public class UserController {
     }
 
     @GetMapping("/quote")
-    @Operation(summary = "get user a random quote")
-    public ResponseEntity<?> quoteUser(){
+    @Operation(summary = "Get user a random quote")
+    public ResponseEntity<String> quoteUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = authentication.getName();
         String quoteMessage = "";
