@@ -54,8 +54,15 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public void deleteUserById(ObjectId id) {
-        userRepository.deleteById(id);
+    public boolean deleteUserById(ObjectId id) {
+        try{
+            userRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            log.error("Error in deleting user: ",e);
+            return false;
+        }
+
     }
 
     public User findByUserName(String username) {
