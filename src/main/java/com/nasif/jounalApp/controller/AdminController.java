@@ -4,6 +4,7 @@ import com.nasif.jounalApp.cache.AppCache;
 import com.nasif.jounalApp.entity.User;
 import com.nasif.jounalApp.repository.UserRepositoryImpl;
 import com.nasif.jounalApp.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
+@Tag(name="4. Admin APIs", description = "Get all registered users and email of users who opted in for mail. Create a new admin user and refreshes the cache. ")
 public class AdminController {
 
     @Autowired

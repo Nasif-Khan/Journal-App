@@ -7,6 +7,8 @@ import com.nasif.jounalApp.repository.UserRepository;
 import com.nasif.jounalApp.service.QuoteService;
 import com.nasif.jounalApp.service.UserService;
 import com.nasif.jounalApp.service.WeatherService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@Tag(name="2. User APIs", description = "Get quotes, weather info for the user & update or delete user.")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -54,6 +57,7 @@ public class UserController {
     }
 
     @GetMapping("/greet")
+    @Operation(summary = "greet the user and gets the current weather of the user's location")
     public ResponseEntity<?> greetUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String greeting = "";
@@ -69,6 +73,7 @@ public class UserController {
     }
 
     @GetMapping("/quote")
+    @Operation(summary = "get user a random quote")
     public ResponseEntity<?> quoteUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = authentication.getName();

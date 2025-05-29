@@ -4,6 +4,7 @@ import com.nasif.jounalApp.entity.JournalEntry;
 import com.nasif.jounalApp.entity.User;
 import com.nasif.jounalApp.service.JournalEntryService;
 import com.nasif.jounalApp.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/journal")
+@Tag(name="3. Journal APIs", description = "Get or create journals for logged in user. Update, delete or get journal from the id.")
 public class JournalEntryControllerV2 {
     //  controller ---> service ---> repository
 
@@ -50,8 +52,9 @@ public class JournalEntryControllerV2 {
         }
     }
 
-    @GetMapping("/id/{myID}") // myID is the PathVariable
-    public ResponseEntity<?> getJournalByID(@PathVariable ObjectId myID){
+    @GetMapping("/id/{id}") // myID is the PathVariable
+    public ResponseEntity<?> getJournalByID(@PathVariable String id){
+        ObjectId myID = new ObjectId(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
         User user = userService.findByUserName(userName);
