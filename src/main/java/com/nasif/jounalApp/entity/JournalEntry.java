@@ -22,4 +22,7 @@ public class JournalEntry {
     private LocalDateTime date;
     private Sentiments sentiment;
 
+    public String getId(){
+        return id != null ? id.toHexString() : null;
+    }
 }

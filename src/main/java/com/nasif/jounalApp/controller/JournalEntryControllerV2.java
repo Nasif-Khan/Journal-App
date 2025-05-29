@@ -58,16 +58,18 @@ public class JournalEntryControllerV2 {
         }
     }
 
-    @GetMapping("/id/{id}") // myID is the PathVariable
+    @GetMapping("/id/{myID}") // myID is the PathVariable
     @Operation(summary = "Get the journal of the current user by its journal id")
-    public ResponseEntity<JournalEntry> getJournalByID(@PathVariable String id){
-        ObjectId myID = new ObjectId(id);
+    public ResponseEntity<JournalEntry> getJournalByID(@PathVariable String myID){
+        ObjectId id = new ObjectId(myID);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
         User user = userService.findByUserName(userName);
+        //        getId() is of type String as we over rode the method and not let spring serialize it
         List<JournalEntry> userJournals = user.getJournalEntries().stream().filter(journalEntry -> journalEntry.getId().equals(myID)).collect(Collectors.toList());
         if(!userJournals.isEmpty()){
-            Optional<JournalEntry> journalEntry = journalEntryService.getJournalEntryById(myID);
+            //            THE JOURNAL ID SHOULD BE OF TYPE OBJECT_ID
+            Optional<JournalEntry> journalEntry = journalEntryService.getJournalEntryById(id);
             if(journalEntry.isPresent()){
                 return new ResponseEntity<>(journalEntry.get(),HttpStatus.OK);
             }
@@ -96,8 +98,10 @@ public class JournalEntryControllerV2 {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
         User user = userService.findByUserName(userName);
-        List<JournalEntry> userJournals = user.getJournalEntries().stream().filter(journalEntry -> journalEntry.getId().equals(myID)).collect(Collectors.toList());
+//        getId() is of type String as we over rode the method and not let spring serialize it
+        List<JournalEntry> userJournals = user.getJournalEntries().stream().filter(journalEntry -> journalEntry.getId().equals(id)).collect(Collectors.toList());
         if(!userJournals.isEmpty()){
+//            THE JOURNAL ID SHOULD BE OF TYPE OBJECT_ID
             Optional<JournalEntry> journalEntry = journalEntryService.getJournalEntryById(myID);
             if(journalEntry.isPresent()){
                 JournalEntry oldEntry = journalEntry.get();
