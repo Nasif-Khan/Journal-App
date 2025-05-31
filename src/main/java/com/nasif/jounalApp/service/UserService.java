@@ -46,6 +46,13 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void addAdmin(User user) {
+        List<String> roles = user.getRoles();
+        roles.add("ADMIN");
+        user.setRoles(roles); // properly set the updated list
+        userRepository.save(user);
+    }
+
     public List<User> getAll() {
         return userRepository.findAll();
     }

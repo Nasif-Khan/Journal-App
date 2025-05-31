@@ -39,6 +39,7 @@ public class SpringSecurity {
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+//        By default csrf is enables. Cross-Site Request Forgery
 
 //        HTTP Basic Auth Security Config
 //        return http.authorizeHttpRequests(request -> request
@@ -55,6 +56,9 @@ public class SpringSecurity {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//      auth have methods called as userDetailsService and passwordEncoder
+//      From our UserDetailsServiceImpl, We get the user of UserDetails type
+//      Now we pass this UserDetail in the auth, and also encodes our password using BCrypt
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 

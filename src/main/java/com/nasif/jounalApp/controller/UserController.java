@@ -56,6 +56,7 @@ public class UserController {
     @DeleteMapping
     @Operation(summary = "Deletes the user from the database")
     public ResponseEntity<Object> deleteUser(){
+//      The user can come to this end point only if he is authenticated, as
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         userRepository.deleteByUserName(authentication.getName());
         return new ResponseEntity<>(HttpStatus.OK);

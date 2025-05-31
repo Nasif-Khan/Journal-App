@@ -54,6 +54,19 @@ public class AdminController {
         userService.saveAdmin(user);
     }
 
+    @PutMapping("/update-user-to-admin/{username}")
+    public ResponseEntity<User> updateUser(@PathVariable("username") String username) {
+        User user = userService.findByUserName(username);
+        if (user != null) {
+            List<String> roles = user.getRoles();
+            if (!roles.contains("ADMIN")) {
+                userService.addAdmin(user);
+            }
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     @GetMapping("/refresh-app-cache")
     @Operation(summary = "Cleans the cache memory and updates with fresh data")
     public void refreshAppCache() {
@@ -75,15 +88,18 @@ public class AdminController {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User user = userService.getUserById(id);
-            user.getJournalEntries().forEach(journalEntry -> {
-                String journalId = journalEntry.getId();
-                ObjectId jId = new ObjectId(journalId);
-                journalEntryService.deleteJournalEntryById(jId, user.getUserName());
-            });
-            userService.deleteUserById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+            if(user != null && !userRepositoryImpl.isAdmin(user)) {
+                user.getJournalEntries().forEach(journalEntry -> {
+                    String journalId = journalEntry.getId();
+                    ObjectId jId = new ObjectId(journalId);
+                    journalEntryService.deleteJournalEntryById(jId, user.getUserName());
+                });
+                userService.deleteUserById(id);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            return new ResponseEntity<>("Cannot delete an ADMIN",HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
-            log.error("Error in deleting user", e);
+            log.error("Error in deleting", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -94,9 +110,20 @@ public class AdminController {
     public ResponseEntity<User> getUserById(@PathVariable ObjectId id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.getUserById(id);
-        if(user != null) {
+        if(user != null ) {
+            System.out.println(user.getUserName() + "is not ADMIN and can be deleted");
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+
+    @GetMapping("/check-admin/{username}")
+    public ResponseEntity<String> isAdmin(@PathVariable String username) {
+        User user = userService.findByUserName(username);
+        boolean admin = userRepositoryImpl.isAdmin(user);
+        if(admin){
+            return new ResponseEntity<>("IS ADMIN", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("IS NOT ADMIN", HttpStatus.UNAUTHORIZED);
     }
 }
